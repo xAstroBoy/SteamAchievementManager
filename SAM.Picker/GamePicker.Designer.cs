@@ -36,6 +36,7 @@
             this._CallbackTimer = new System.Windows.Forms.Timer(this.components);
             this._PickerToolStrip = new System.Windows.Forms.ToolStrip();
             this._RefreshGamesButton = new System.Windows.Forms.ToolStripButton();
+            this.unlockAllGames = new System.Windows.Forms.ToolStripButton();
             this._AddGameTextBox = new System.Windows.Forms.ToolStripTextBox();
             this._AddGameButton = new System.Windows.Forms.ToolStripButton();
             this._FilterDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
@@ -47,6 +48,7 @@
             this._PickerStatusStrip = new System.Windows.Forms.StatusStrip();
             this._PickerStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this._DownloadStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.unlockAllProgress = new System.Windows.Forms.ToolStripProgressBar();
             this._LogoWorker = new System.ComponentModel.BackgroundWorker();
             this._ListWorker = new System.ComponentModel.BackgroundWorker();
             _ToolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -58,12 +60,12 @@
             // _ToolStripSeparator1
             // 
             _ToolStripSeparator1.Name = "_ToolStripSeparator1";
-            _ToolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            _ToolStripSeparator1.Size = new System.Drawing.Size(6, 34);
             // 
             // _ToolStripSeparator2
             // 
             _ToolStripSeparator2.Name = "_ToolStripSeparator2";
-            _ToolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            _ToolStripSeparator2.Size = new System.Drawing.Size(6, 34);
             // 
             // _LogoImageList
             // 
@@ -78,8 +80,10 @@
             // 
             // _PickerToolStrip
             // 
+            this._PickerToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this._PickerToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._RefreshGamesButton,
+            this.unlockAllGames,
             _ToolStripSeparator1,
             this._AddGameTextBox,
             this._AddGameButton,
@@ -87,7 +91,7 @@
             this._FilterDropDownButton});
             this._PickerToolStrip.Location = new System.Drawing.Point(0, 0);
             this._PickerToolStrip.Name = "_PickerToolStrip";
-            this._PickerToolStrip.Size = new System.Drawing.Size(742, 25);
+            this._PickerToolStrip.Size = new System.Drawing.Size(742, 34);
             this._PickerToolStrip.TabIndex = 1;
             this._PickerToolStrip.Text = "toolStrip1";
             // 
@@ -96,21 +100,32 @@
             this._RefreshGamesButton.Image = global::SAM.Picker.Resources.Refresh;
             this._RefreshGamesButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._RefreshGamesButton.Name = "_RefreshGamesButton";
-            this._RefreshGamesButton.Size = new System.Drawing.Size(105, 22);
+            this._RefreshGamesButton.Size = new System.Drawing.Size(157, 29);
             this._RefreshGamesButton.Text = "Refresh Games";
             this._RefreshGamesButton.Click += new System.EventHandler(this.OnRefresh);
             // 
+            // unlockAllGames
+            // 
+            this.unlockAllGames.Enabled = false;
+            this.unlockAllGames.Image = global::SAM.Picker.Resources.lock_unlock;
+            this.unlockAllGames.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.unlockAllGames.Name = "unlockAllGames";
+            this.unlockAllGames.Size = new System.Drawing.Size(119, 29);
+            this.unlockAllGames.Text = "Unlock All";
+            this.unlockAllGames.Click += new System.EventHandler(this.unlockAllGames_Click);
+            // 
             // _AddGameTextBox
             // 
+            this._AddGameTextBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._AddGameTextBox.Name = "_AddGameTextBox";
-            this._AddGameTextBox.Size = new System.Drawing.Size(100, 25);
+            this._AddGameTextBox.Size = new System.Drawing.Size(100, 34);
             // 
-            // _AddGameButton
+            // toolStripButton1
             // 
             this._AddGameButton.Image = global::SAM.Picker.Resources.Search;
             this._AddGameButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._AddGameButton.Name = "_AddGameButton";
-            this._AddGameButton.Size = new System.Drawing.Size(83, 22);
+            this._AddGameButton.Size = new System.Drawing.Size(125, 29);
             this._AddGameButton.Text = "Add Game";
             this._AddGameButton.Click += new System.EventHandler(this.OnAddGame);
             // 
@@ -125,7 +140,7 @@
             this._FilterDropDownButton.Image = global::SAM.Picker.Resources.Filter;
             this._FilterDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._FilterDropDownButton.Name = "_FilterDropDownButton";
-            this._FilterDropDownButton.Size = new System.Drawing.Size(29, 22);
+            this._FilterDropDownButton.Size = new System.Drawing.Size(42, 29);
             this._FilterDropDownButton.Text = "Game filtering";
             // 
             // _FilterGamesMenuItem
@@ -134,7 +149,7 @@
             this._FilterGamesMenuItem.CheckOnClick = true;
             this._FilterGamesMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this._FilterGamesMenuItem.Name = "_FilterGamesMenuItem";
-            this._FilterGamesMenuItem.Size = new System.Drawing.Size(142, 22);
+            this._FilterGamesMenuItem.Size = new System.Drawing.Size(218, 34);
             this._FilterGamesMenuItem.Text = "Show &games";
             this._FilterGamesMenuItem.CheckedChanged += new System.EventHandler(this.OnFilterUpdate);
             // 
@@ -142,7 +157,7 @@
             // 
             this._FilterDemosMenuItem.CheckOnClick = true;
             this._FilterDemosMenuItem.Name = "_FilterDemosMenuItem";
-            this._FilterDemosMenuItem.Size = new System.Drawing.Size(142, 22);
+            this._FilterDemosMenuItem.Size = new System.Drawing.Size(218, 34);
             this._FilterDemosMenuItem.Text = "Show &demos";
             this._FilterDemosMenuItem.CheckedChanged += new System.EventHandler(this.OnFilterUpdate);
             // 
@@ -150,7 +165,7 @@
             // 
             this._FilterModsMenuItem.CheckOnClick = true;
             this._FilterModsMenuItem.Name = "_FilterModsMenuItem";
-            this._FilterModsMenuItem.Size = new System.Drawing.Size(142, 22);
+            this._FilterModsMenuItem.Size = new System.Drawing.Size(218, 34);
             this._FilterModsMenuItem.Text = "Show &mods";
             this._FilterModsMenuItem.CheckedChanged += new System.EventHandler(this.OnFilterUpdate);
             // 
@@ -158,7 +173,7 @@
             // 
             this._FilterJunkMenuItem.CheckOnClick = true;
             this._FilterJunkMenuItem.Name = "_FilterJunkMenuItem";
-            this._FilterJunkMenuItem.Size = new System.Drawing.Size(142, 22);
+            this._FilterJunkMenuItem.Size = new System.Drawing.Size(218, 34);
             this._FilterJunkMenuItem.Text = "Show &junk";
             this._FilterJunkMenuItem.CheckedChanged += new System.EventHandler(this.OnFilterUpdate);
             // 
@@ -185,9 +200,11 @@
             // 
             // _PickerStatusStrip
             // 
+            this._PickerStatusStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this._PickerStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._PickerStatusLabel,
-            this._DownloadStatusLabel});
+            this._DownloadStatusLabel,
+            this.unlockAllProgress});
             this._PickerStatusStrip.Location = new System.Drawing.Point(0, 270);
             this._PickerStatusStrip.Name = "_PickerStatusStrip";
             this._PickerStatusStrip.Size = new System.Drawing.Size(742, 22);
@@ -197,7 +214,7 @@
             // _PickerStatusLabel
             // 
             this._PickerStatusLabel.Name = "_PickerStatusLabel";
-            this._PickerStatusLabel.Size = new System.Drawing.Size(727, 17);
+            this._PickerStatusLabel.Size = new System.Drawing.Size(727, 15);
             this._PickerStatusLabel.Spring = true;
             this._PickerStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -205,9 +222,16 @@
             // 
             this._DownloadStatusLabel.Image = global::SAM.Picker.Resources.Download;
             this._DownloadStatusLabel.Name = "_DownloadStatusLabel";
-            this._DownloadStatusLabel.Size = new System.Drawing.Size(111, 17);
+            this._DownloadStatusLabel.Size = new System.Drawing.Size(170, 25);
             this._DownloadStatusLabel.Text = "Download status";
             this._DownloadStatusLabel.Visible = false;
+            // 
+            // unlockAllProgress
+            // 
+            this.unlockAllProgress.Name = "unlockAllProgress";
+            this.unlockAllProgress.Size = new System.Drawing.Size(100, 16);
+            this.unlockAllProgress.ToolTipText = "Unlock All Progress";
+            this.unlockAllProgress.Visible = false;
             // 
             // _LogoWorker
             // 
@@ -260,6 +284,7 @@
         private System.Windows.Forms.ToolStripStatusLabel _PickerStatusLabel;
         private System.ComponentModel.BackgroundWorker _LogoWorker;
         private System.ComponentModel.BackgroundWorker _ListWorker;
-	}
+        private System.Windows.Forms.ToolStripButton unlockAllGames;
+        private System.Windows.Forms.ToolStripProgressBar unlockAllProgress;
+    }
 }
-

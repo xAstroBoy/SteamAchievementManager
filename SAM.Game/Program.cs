@@ -33,6 +33,7 @@ namespace SAM.Game
         public static void Main(string[] args)
         {
             long appId;
+            bool isAuto;
 
             if (args.Length == 0)
             {
@@ -40,7 +41,22 @@ namespace SAM.Game
                 return;
             }
 
-            if (long.TryParse(args[0], out appId) == false)
+            if (args.Length == 2)
+            {
+                if (args[1] == "auto")
+                {
+                    isAuto = true;
+                }
+                else
+                {
+                    isAuto = false;
+                }
+            }
+            else
+            {
+                isAuto = false;
+            } 
+            if(long.TryParse(args[0], out appId) == false)
             {
                 MessageBox.Show(
                     "Could not parse application ID from command line argument.",
@@ -110,7 +126,7 @@ namespace SAM.Game
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Manager(appId, client));
+                Application.Run(new Manager(appId, client, isAuto));
             }
         }
     }

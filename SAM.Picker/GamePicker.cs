@@ -1,4 +1,4 @@
-/* Copyright (c) 2019 Rick (rick 'at' gibbed 'dot' us)
+/* Copyright (c) 2017 Rick (rick 'at' gibbed 'dot' us)
  * 
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -33,6 +33,7 @@ using System.Net;
 using System.Windows.Forms;
 using System.Xml.XPath;
 using APITypes = SAM.API.Types;
+
 
 namespace SAM.Picker
 {
@@ -129,6 +130,7 @@ namespace SAM.Picker
 
             this.RefreshGames();
             this._RefreshGamesButton.Enabled = true;
+            this.unlockAllGames.Enabled = true;
             this.DownloadNextLogo();
         }
 
@@ -444,6 +446,56 @@ namespace SAM.Picker
         private void OnFilterUpdate(object sender, EventArgs e)
         {
             this.RefreshGames();
+        }
+    
+        private List<GameInfo> GetAllGames()
+        {
+            var games = new List<GameInfo>();
+            foreach (var game in this._Games.Values)
+            {
+                games.Add(game);
+            }
+            return games;
+        }
+
+        private void unlockAllGames_Click(object sender, EventArgs e)
+        {
+            var Games = GetAllGames();
+            if (MessageBox.Show(
+                "This will open and close A LOT of windows.\n\nIn your case, it could be " + Games.Count + " windows.\n\nWhile this shouldn't cause a performance drop, it might get annoying if you're trying to do something.\n\nIs this OK?",
+                "Warning",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning) != DialogResult.No)
+            {
+                unlockAllProgress.Visible = true;
+                unlockAllProgress.Value = 0;
+                unlockAllProgress.Maximum = Games.Count;
+
+                foreach (var Game in Games)
+                {
+                    unlockAllProgress.Value++;
+                    try
+                    {
+                        var process = Process.Start("SAM.Game.exe", Game.Id.ToString(CultureInfo.InvariantCulture) + " auto");
+
+                        if (process != null && process.HasExited != true)
+                        {
+                            process.WaitForExit();
+                        }
+                    }
+                    catch (Win32Exception)
+                    {
+                        MessageBox.Show(
+                            this,
+                            "Failed to start SAM.Game.exe.",
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
+                }
+
+                unlockAllProgress.Visible = false;
+            }
         }
     }
 }
